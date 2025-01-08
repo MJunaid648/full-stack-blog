@@ -8,3 +8,10 @@ body {
   overflow-x: hidden;
   font-family: "Montserrat", "sans-serif";
 }
+.cl-internal-1dauvpw {
+  display: none;
+}
+
+.animatedButton{
+  animation-duration: 10000ms;
+}
