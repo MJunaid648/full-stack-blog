@@ -16,8 +16,7 @@ const PostListItem = () => {
       {/* details */}
       <div className="flex flex-col gap-4 xl:w-2/3 ">
         <Link to="/test" className="text-4xl font-semibold">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Odio aliquid
-          dicta unde exercitationem.
+          Lorem ipsum dolor sit amet consectetur adipisicing elit.
         </Link>
         <div className="flex item-center gap-2 text-gray-400 text-sm">
           <span>Written by</span>
@@ -28,8 +27,7 @@ const PostListItem = () => {
         </div>
         <p>
           Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illum
-          necessitatibus ratione veritatis quod delectus adipisci nostrum
-          explicabo, modi dolor perferendis fuga eius earum fugit sunt
+          necessitatibus ratione perferendis fuga eius earum fugit sunt
           repudiandae...
           <Link className="text-blue-800 underline ml-2">Read More</Link>
         </p>

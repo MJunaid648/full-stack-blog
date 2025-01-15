@@ -13,7 +13,7 @@ const FeaturedPosts = () => {
         />
         {/* details */}
         <div className="flex items-center gap-4">
-          <h1 className="font-semibold lg:text-lg ">01.</h1>
+          <h3 className="font-semibold lg:text-lg ">01.</h3>
           <Link className="text-blue-800 lg:text-lg ">Web Design</Link>
           <span className="text-gray-500 ">2 days ago</span>
         </div>
@@ -39,7 +39,7 @@ const FeaturedPosts = () => {
           <div className="w-2/3">
             {/* details */}
             <div className="flex items-center gap-4 text-sm lg:text-base mb-4 ">
-              <h1 className="font-semibold ">02.</h1>
+              <h3 className="font-semibold ">02.</h3>
               <Link className="text-blue-800 ">Web Design</Link>
               <span className="text-gray-500 text-sm">2 days ago</span>
             </div>
@@ -64,7 +64,7 @@ const FeaturedPosts = () => {
           <div className="w-2/3">
             {/* details */}
             <div className="flex items-center gap-4 text-sm lg:text-base mb-4 ">
-              <h1 className="font-semibold ">02.</h1>
+              <h3 className="font-semibold ">03.</h3>
               <Link className="text-blue-800 ">Web Design</Link>
               <span className="text-gray-500 text-sm">2 days ago</span>
             </div>
@@ -89,7 +89,7 @@ const FeaturedPosts = () => {
           <div className="w-2/3">
             {/* details */}
             <div className="flex items-center gap-4 text-sm lg:text-base mb-4 ">
-              <h1 className="font-semibold ">02.</h1>
+              <h3 className="font-semibold ">04.</h3>
               <Link className="text-blue-800 ">Web Design</Link>
               <span className="text-gray-500 text-sm">2 days ago</span>
             </div>
