@@ -1,6 +1,6 @@
 import { useUser } from "@clerk/clerk-react";
 import ReactQuill from "react-quill-new";
-import "react-quill-new/dist/quill.snow.css";
+// import "react-quill-new/dist/quill.snow.css";
 
 const Write = () => {
   // const { isSignedIn, isLoaded } = useUser()
