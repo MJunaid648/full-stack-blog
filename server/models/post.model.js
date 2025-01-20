@@ -4,7 +4,7 @@ const postSchema = new mongoose.Schema(
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: true, 
+      required: true,
     },
     img: {
       type: String,
@@ -20,6 +20,10 @@ const postSchema = new mongoose.Schema(
     },
     desc: {
       type: String,
+    },
+    category: {
+      type: String,
+      default: "general",
     },
     content: {
       type: String,

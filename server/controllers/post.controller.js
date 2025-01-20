@@ -15,15 +15,28 @@ export const createPost = async (req, res) => {
   const clerkUserId = req.auth.userId;
 
   if (!clerkUserId) {
-    return res.status(401).json({ message: "Not authenticated!" });
+    return res.status(401).json({ message: "Unauthorized!" });
   }
 
-  const user = await User.findOne(clerkUserId);
+  const user = await User.findOne({ clerkUserId });
+
   if (!user) {
     return res.status(404).json({ message: "User not found!" });
   }
 
-  const newPost = new Post({ user: user._id, ...req.body });
+  let baseSlug = req.body.title.replace(/ /g, "-").toLowerCase();
+  let slug = baseSlug;
+  let existingPost = await Post.findOne({ slug });
+  let counter = 2;
+
+  // Ensure unique slug
+  while (existingPost) {
+    slug = `${baseSlug}-${counter}`;
+    existingPost = await Post.findOne({ slug });
+    counter++;
+  }
+
+  const newPost = new Post({ user: user._id, slug, ...req.body });
 
   const post = await newPost.save();
   res.status(201).json(post);
@@ -33,14 +46,20 @@ export const deletePost = async (req, res) => {
   const clerkUserId = req.auth.userId;
 
   if (!clerkUserId) {
-    return res.status(401).json({ message: "Not authenticated!" });
+    return res.status(401).json({ message: "Unauthorized!" });
   }
 
   const user = await User.findOne(clerkUserId);
 
-  await Post.findOneAndDelete({
+  const deletedPost = await Post.findOneAndDelete({
     _id: req.params.id,
     user: user._id,
   });
-  res.status(201).json("Post has been deleted");
+
+  if (!deletePost)
+    return res
+      .status(403)
+      .json({ message: "You can only delete your own posts!" });
+
+  res.status(201).json({ message: "Post has been deleted" });
 };

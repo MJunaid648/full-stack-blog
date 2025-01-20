@@ -14,22 +14,32 @@ export const clertWebHook = async (req, res) => {
   try {
     event = wh.verify(payload, headers);
   } catch (err) {
-    res.status(400).json({ message: "Invalid webhook signature" });
+    res.status(400).json({ message: "Invalid webhook signature!" });
   }
 
-  // console.log(event.data)
+  // console.log(event.data);
+
   if (event.type === "user.created") {
-    const newUser = new User({
-      clerkUserId: event.data.id,
-      username:
-        event.data.username || event.data.email_addresses[0].email_address,
-      email: event.data.email_addresses[0].email_address,
-      img: event.data.profile_image_url,
-    });
+    try {
+      const newUser = new User({
+        clerkUserId: event.data.id,
+        username:
+          event.data.username || event.data.email_addresses[0].email_address,
+        email: event.data.email_addresses[0].email_address,
+        img: event.data.profile_image_url,
+      });
 
-    const res = await newUser.save();
-    console.log("res: ", res);
+      const saveResult = await newUser.save();
+      console.log("User saved:", saveResult);
+      return res.status(201).json({ message: "User created successfully!" });
+    } catch (err) {
+      console.log("Error saving user:", err);
+      return res.status(500).json({ message: "Failed to save user" });
+    }
+  } else {
+    console.log("Received non-user.created event");
+
+    res.status(200).json({ message: "Webhook received" });
   }
-
   res.status(200).json({ message: "Webhook received" });
 };

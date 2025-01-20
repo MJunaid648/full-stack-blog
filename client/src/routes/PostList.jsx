@@ -1,9 +1,30 @@
 import { useState } from "react";
 import PostListItem from "../components/PostListItem";
 import SideMenu from "../components/SideMenu";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+
+const fetchPosts = async () => {
+  try {
+    const res = await axios.get(`${import.meta.env.VITE_API_URL}/posts`);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 const PostList = () => {
   const [open, setOpen] = useState(false);
+  const { isPending, error, data } = useQuery({
+    queryKey: ["repoData"],
+    queryFn: () => fetchPosts(),
+  });
+
+  if (isPending) return <div>Loading...</div>;
+  if (error) return <div>Error: {error.message}</div>;
+
+  console.log(data);
+
   return (
     <div className="">
       <h1 className="mb-8 text-2xl">Development Blog</h1>
