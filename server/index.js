@@ -6,6 +6,7 @@ import commentRouter from "./routes/user.route.js";
 import webHookRouter from "./routes/webhook.route.js";
 import { clerkMiddleware } from "@clerk/express";
 import cors from "cors";
+import userModel from "./models/user.model.js";
 
 const app = express();
 
@@ -15,10 +16,12 @@ app.use("/webhooks", webHookRouter);
 app.use(express.json());
 
 // FOR IMAGE UPLOAD  USING IMAGEKIT.IO
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", 
-    "Origin, X-Requested-With, Content-Type, Accept");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
   next();
 });
 

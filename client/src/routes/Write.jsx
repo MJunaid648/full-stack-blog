@@ -1,39 +1,35 @@
 import { useAuth, useUser } from "@clerk/clerk-react";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ReactQuill from "react-quill-new";
 import "react-quill-new/dist/quill.snow.css";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { IKContext, IKUpload } from "imagekitio-react";
-
-const authenticator = async () => {
-  try {
-    const response = await fetch(
-      `${import.meta.env.VITE_API_URL}/posts/upload-auth`
-    );
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(
-        `Request failed with status ${response.status}: ${errorText}`
-      );
-    }
-
-    const data = await response.json();
-    const { signature, expire, token } = data;
-    return { signature, expire, token };
-  } catch (error) {
-    throw new Error(`Authentication request failed: ${error.message}`);
-  }
-};
+import Upload from "../components/Upload";
 
 const Write = () => {
   const { isSignedIn, isLoaded } = useUser();
   const { getToken } = useAuth();
   const [postContent, setPostContent] = useState("");
+  const [progress, setProgress] = useState(0);
+  const [cover, setCover] = useState("");
+  const [image, setImage] = useState("");
+  const [video, setVideo] = useState("");
   const navigate = useNavigate();
+  useEffect(() => {
+    image &&
+      setPostContent(
+        (prev) => prev + `<p><img src="${image.url}" alt=""/></p>`
+      );
+  }, [image]);
+
+  useEffect(() => {
+    video &&
+      setPostContent(
+        (prev) => prev + `<p><iframe class="ql-video" src="${video.url}"/></p>`
+      );
+  }, [video]);
 
   const mutation = useMutation({
     mutationFn: async (newPost) => {
@@ -46,7 +42,7 @@ const Write = () => {
     },
     onSuccess: (res) => {
       toast.success("Post created successfully");
-      navigate(`/${res.data.slug}`);
+      // navigate(`/${res.data.slug}`);
     },
   });
 
@@ -57,6 +53,7 @@ const Write = () => {
     e.preventDefault();
     const formData = new FormData(e.target);
     const data = {
+      img:cover.filePath || "",
       title: formData.get("title"),
       category: formData.get("category"),
       desc: formData.get("desc"),
@@ -70,20 +67,12 @@ const Write = () => {
     <div className="h-[calc(100vh-64px)] md:h-[calc(100vh-80px)] flex flex-col gap-4">
       <h1 className="text-xl font-light">Create a New Post</h1>
       <form onSubmit={handleSubmit} className="flex flex-col flex-1 gap-4 mb-2">
-        {/* <button className="w-max p-2 shadow-md rounded-xl text-sm text-gray-500 bg-white">
-          Add a cover image
-        </button> */}
-        <IKContext
-          publicKey={import.meta.env.VITE_IK_PUBLIC_KEY}
-          urlEndpoint={import.meta.env.VITE_IK_URL_ENDPOINT}
-          authenticator={authenticator}
-        >
-          <IKUpload
-            fileName="test-upload.png"
-            // onError={onError}
-            // onSuccess={onSuccess}
-          />
-        </IKContext>
+        <Upload type="image" setProgress={setProgress} setData={setCover}>
+          <button className="w-max p-2 shadow-md rounded-xl text-sm text-gray-500 bg-white">
+            Add a cover image
+          </button>
+        </Upload>
+        {cover && <img src={cover.url} alt="cover" className="rounded-xl w-max h-max" />}
 
         <input
           className="text-2xl font-semibold bg-transparent outline-none"
@@ -92,6 +81,7 @@ const Write = () => {
           name="title"
           required
         />
+        
         <div className="flex items-center gap-4">
           <label htmlFor="cat">Choose a category</label>
           <select name="category" id="cat">
@@ -109,20 +99,34 @@ const Write = () => {
           className="p-4 rounded-xl bg-white shadow-md"
           required
         />
-        <div className="flex">
+        <div className="flex flex-1">
           <div className="flex flex-col gap-2">
-            <div className="cursor-pointer">📷</div>
-            <div className="cursor-pointer">▶️</div>
+            <Upload
+              type="image"
+              setProgress={setProgress}
+              setData={setImage}
+              className="cursor-pointer"
+            >
+              📷
+            </Upload>
+            <Upload
+              type="video"
+              setProgress={setProgress}
+              setData={setVideo}
+            >
+              ▶️
+            </Upload>
           </div>
           <ReactQuill
             theme="snow"
             className="flex-1 rounded-xl bg-white"
             value={postContent}
             onChange={setPostContent}
+            readOnly={progress > 0 && progress < 100}
           />
         </div>
         <button
-          disabled={mutation.isPending}
+          disabled={mutation.isPending || (progress > 0 && progress < 100)}
           className="bg-blue-800 text-white font-medium rounded-xl mt-4 mb-2 py-2 px-4 w-max disabled:bg-blue-400 disabled:cursor-not-allowed"
         >
           {mutation.isPending ? "Saving..." : "Save"}
@@ -130,6 +134,7 @@ const Write = () => {
         {mutation.isError && (
           <span className="text-red-600">Error: {mutation.error.message}</span>
         )}
+        {"Progress:" + progress}
       </form>
     </div>
   );
