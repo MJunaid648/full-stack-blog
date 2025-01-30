@@ -42,7 +42,7 @@ const Write = () => {
     },
     onSuccess: (res) => {
       toast.success("Post created successfully");
-      // navigate(`/${res.data.slug}`);
+      navigate(`/${res.data.slug}`);
     },
   });
 
