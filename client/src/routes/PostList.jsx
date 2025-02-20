@@ -3,11 +3,14 @@ import PostListItem from "../components/PostListItem";
 import SideMenu from "../components/SideMenu";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { useSearchParams } from "react-router-dom";
 
-const fetchPosts = async (pageParam) => {
+const fetchPosts = async (pageParam, searchParams) => {
   try {
+    const searchParamsObj = Object.fromEntries(searchParams);
+
     const res = await axios.get(`${import.meta.env.VITE_API_URL}/posts`, {
-      params: { page: pageParam, limit: 2 },
+      params: { page: pageParam, limit: 10, ...searchParamsObj },
     });
     return res.data;
   } catch (error) {
@@ -16,6 +19,8 @@ const fetchPosts = async (pageParam) => {
 };
 
 const PostList = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+
   const {
     data,
     error,
@@ -25,8 +30,8 @@ const PostList = () => {
     isFetchingNextPage,
     status,
   } = useInfiniteQuery({
-    queryKey: ["posts"],
-    queryFn: ({pageParam = 1}) => fetchPosts(pageParam),
+    queryKey: ["posts", searchParams.toString()],
+    queryFn: ({ pageParam = 1 }) => fetchPosts(pageParam, searchParams),
     initialPageParam: 1,
     getNextPageParam: (lastPage, pages) => {
       return lastPage.hasMore ? pages.length + 1 : undefined;

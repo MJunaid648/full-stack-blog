@@ -1,7 +1,25 @@
-import { Link } from "react-router-dom";
+import {  useSearchParams } from "react-router-dom";
 import Search from "../components/Search";
 
 const SideMenu = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const handleFilterChange = (e) => {
+    if (searchParams.get("sort") !== e.target.value) {
+      setSearchParams({
+        ...Object.fromEntries(searchParams),
+        sort: e.target.value,
+      });
+    }
+  };
+  const handleCategoryChange = (category) => {
+    if (searchParams.get("cat") !== category) {
+      setSearchParams({
+        ...Object.fromEntries(searchParams),
+        cat: category,
+      });
+    }
+  };
   return (
     <div className="px-4 h-max sticky top-8">
       <h3 className="mb-4 text-sm font-medium">Search</h3>
@@ -12,59 +30,85 @@ const SideMenu = () => {
           <input
             type="radio"
             name="sort"
+            onChange={handleFilterChange}
             value="newest"
             className="appearance-none w-4 h-4 border-[1.5px] bg-white border-blue-800 
                        cursor-pointer rounded-sm checked:bg-blue-800 "
-          />Newest
+          />
+          Newest
         </label>
         <label className="flex items-center gap-2 cursor-pointer ">
           <input
             type="radio"
             name="sort"
+            onChange={handleFilterChange}
             value="popular"
             className="appearance-none w-4 h-4 border-[1.5px] bg-white border-blue-800 
                        cursor-pointer rounded-sm checked:bg-blue-800 "
-          />Most Popular
+          />
+          Most Popular
         </label>
         <label className="flex items-center gap-2 cursor-pointer ">
           <input
             type="radio"
             name="sort"
+            onChange={handleFilterChange}
             value="trending"
             className="appearance-none w-4 h-4 border-[1.5px] bg-white border-blue-800 
                        cursor-pointer rounded-sm checked:bg-blue-800 "
-          />Trending
+          />
+          Trending
         </label>
         <label className="flex items-center gap-2 cursor-pointer ">
           <input
             type="radio"
             name="sort"
+            onChange={handleFilterChange}
             value="oldest"
             className="appearance-none w-4 h-4 border-[1.5px] bg-white border-blue-800 
                        cursor-pointer rounded-sm checked:bg-blue-800 "
-          />Olders
+          />
+          Oldest
         </label>
       </div>
       <h3 className="mt-8 mb-4 text-sm font-medium">Categories</h3>
       <div className="flex flex-col gap-2 text-sm">
-        <Link className="underline" to="/posts">
+        <span
+          className="underline cursor-pointer"
+          onClick={() => handleCategoryChange("general")}
+        >
           All
-        </Link>
-        <Link className="underline" to="/posts?cat=web-design">
+        </span>
+        <span
+          className="underline cursor-pointer"
+          onClick={() => handleCategoryChange("web-design")}
+        >
           Web Design
-        </Link>
-        <Link className="underline" to="/posts?cat=development">
+        </span>
+        <span
+          className="underline cursor-pointer"
+          onClick={() => handleCategoryChange("development")}
+        >
           Development
-        </Link>
-        <Link className="underline" to="/posts?cat=databases">
+        </span>
+        <span
+          className="underline cursor-pointer"
+          onClick={() => handleCategoryChange("databases")}
+        >
           Databases
-        </Link>
-        <Link className="underline" to="/posts?cat=seo">
+        </span>
+        <span
+          className="underline cursor-pointer"
+          onClick={() => handleCategoryChange("seo")}
+        >
           Search Engines
-        </Link>
-        <Link className="underline" to="/posts?cat=marketing">
+        </span>
+        <span
+          className="underline cursor-pointer"
+          onClick={() => handleCategoryChange("marketing")}
+        >
           Marketing
-        </Link>
+        </span>
       </div>
     </div>
   );

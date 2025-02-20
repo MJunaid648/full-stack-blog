@@ -2,11 +2,10 @@ import express from "express";
 import connectDB from "./lib/connectDB.js";
 import userRouter from "./routes/user.route.js";
 import postRouter from "./routes/post.route.js";
-import commentRouter from "./routes/user.route.js";
+import commentRouter from "./routes/comment.route.js";
 import webHookRouter from "./routes/webhook.route.js";
 import { clerkMiddleware } from "@clerk/express";
 import cors from "cors";
-import userModel from "./models/user.model.js";
 
 const app = express();
 
